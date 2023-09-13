@@ -1,10 +1,11 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         List<Item> itens = new ArrayList<>();
-
+        
         itens.add(new Item("Secador de Cabelo", 120.0, true));
         itens.add(new Item("Televisão 4K", 800.0, true));
         itens.add(new Item("Notebook", 1500.0, true));
@@ -17,11 +18,14 @@ public class Main {
         itens.add(new Item("Aula de Yoga", 40.0, false));
 
         double totalImpostosTaxas = 0.0;
+        
+        DecimalFormat df = new DecimalFormat("#.##"); 
 
         for (Item item : itens) {
             ImpostoTaxa impostoTaxa;
             if (item.isProduto()) {
                 impostoTaxa = new ICMS();
+                impostoTaxa = new IPI(); 
             } else {
                 impostoTaxa = new ISS();
             }
@@ -30,12 +34,12 @@ public class Main {
             totalImpostosTaxas += impostoTaxaCalculado;
 
             System.out.println("Item: " + item.getNome());
-            System.out.println("  Valor original: R$" + item.getValor());
-            System.out.println("  Imposto/Taxa (" + impostoTaxa.getClass().getSimpleName() + "): R$" + impostoTaxaCalculado);
+            System.out.println("  Valor original: R$" + df.format(item.getValor()));
+            System.out.println("  Imposto/Taxa (" + impostoTaxa.getClass().getSimpleName() + "): R$" + df.format(impostoTaxaCalculado));
         }
 
-        System.out.println("Total de impostos/taxas: R$" + totalImpostosTaxas);
-        System.out.println("Total a pagar: R$" + (totalImpostosTaxas + itens.stream().mapToDouble(Item::getValor).sum()));
+        System.out.println("Total de impostos/taxas: R$" + df.format(totalImpostosTaxas));
+        System.out.println("Total a pagar: R$" + df.format(totalImpostosTaxas + itens.stream().mapToDouble(Item::getValor).sum()));
     }
 }
 
