@@ -1,45 +1,118 @@
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        List<Item> itens = new ArrayList<>();
-        
-        itens.add(new Item("Secador de Cabelo", 120.0, true));
-        itens.add(new Item("Televisão 4K", 800.0, true));
-        itens.add(new Item("Notebook", 1500.0, true));
-        itens.add(new Item("Relógio de Pulso", 300.0, true));
-        itens.add(new Item("Fone de Ouvido Bluetooth", 80.0, true));
-        itens.add(new Item("Câmera Digital", 400.0, true));
-        itens.add(new Item("Corte de Cabelo", 50.0, false));
-        itens.add(new Item("Manicure", 30.0, false));
-        itens.add(new Item("Limpeza de Carpete", 120.0, false));
-        itens.add(new Item("Aula de Yoga", 40.0, false));
+        Scanner scanner = new Scanner(System.in);
 
-        double totalImpostosTaxas = 0.0;
-        
-        DecimalFormat df = new DecimalFormat("#.##"); 
+        while (true) {
+            System.out.println("Escolha uma forma geométrica:");
+            System.out.println("1 - Triângulo");
+            System.out.println("2 - Retângulo");
+            System.out.println("3 - Quadrado");
+            System.out.println("4 - Círculo");
+            System.out.println("5 - Sair");
+            System.out.print("Digite a opção desejada: ");
+            int opcao = scanner.nextInt();
+            System.out.println();
 
-        for (Item item : itens) {
-            ImpostoTaxa impostoTaxa;
-            if (item.isProduto()) {
-                impostoTaxa = new ICMS();
-                impostoTaxa = new IPI(); 
-            } else {
-                impostoTaxa = new ISS();
+            if (opcao == 5) {
+                scanner.close();
+                System.exit(0);
             }
 
-            double impostoTaxaCalculado = impostoTaxa.calcularImpostoTaxa(item);
-            totalImpostosTaxas += impostoTaxaCalculado;
+            boolean operacaoSelecionada = false;
 
-            System.out.println("Item: " + item.getNome());
-            System.out.println("  Valor original: R$" + df.format(item.getValor()));
-            System.out.println("  Imposto/Taxa (" + impostoTaxa.getClass().getSimpleName() + "): R$" + df.format(impostoTaxaCalculado));
+            if (opcao >= 1 && opcao <= 4) {
+                operacaoSelecionada = true;
+                System.out.println("Escolha uma operação:");
+                System.out.println("1 - Calcular Área");
+                System.out.println("2 - Calcular Perímetro");
+                System.out.print("Digite a operação desejada: ");
+                int operacao = scanner.nextInt();
+                System.out.println();
+
+                switch (opcao) {
+                    case 1:
+                        if (operacao == 1) {
+                            System.out.print("Digite a base do triângulo: ");
+                            int baseT = scanner.nextInt();
+                            System.out.print("Digite a altura do triângulo: ");
+                            int alturaT = scanner.nextInt();
+                            Triangulo t = new Triangulo(baseT, alturaT);
+                            t.calcularArea();
+                            t.imprimir();
+                        } else if (operacao == 2) {
+                            System.out.println("Operação inválida para Triângulo. Tente novamente.");
+                        } else {
+                            System.out.println("Operação inválida. Tente novamente.");
+                        }
+                        break;
+
+                    case 2:
+                        if (operacao == 1) {
+                            System.out.print("Digite a base do retângulo: ");
+                            int baseR = scanner.nextInt();
+                            System.out.print("Digite a altura do retângulo: ");
+                            int alturaR = scanner.nextInt();
+                            Retangulo r = new Retangulo(baseR, alturaR);
+                            r.calcularArea();
+                            r.imprimir();
+                        } else if (operacao == 2) {
+                            System.out.print("Digite a base do retângulo: ");
+                            int baseR = scanner.nextInt();
+                            System.out.print("Digite a altura do retângulo: ");
+                            int alturaR = scanner.nextInt();
+                            Retangulo r = new Retangulo(baseR, alturaR);
+                            r.calcularPerimetro();
+                            r.imprimir();
+                        } else {
+                            System.out.println("Operação inválida. Tente novamente.");
+                        }
+                        break;
+
+                    case 3:
+                        if (operacao == 1) {
+                            System.out.print("Digite o lado do quadrado: ");
+                            int ladoQ = scanner.nextInt();
+                            Quadrado q = new Quadrado(ladoQ);
+                            q.calcularArea();
+                            q.imprimir();
+                        } else if (operacao == 2) {
+                            System.out.print("Digite o lado do quadrado: ");
+                            int ladoQ = scanner.nextInt();
+                            Quadrado q = new Quadrado(ladoQ);
+                            q.calcularPerimetro();
+                            q.imprimir();
+                        } else {
+                            System.out.println("Operação inválida. Tente novamente.");
+                        }
+                        break;
+
+                    case 4:
+                        if (operacao == 1) {
+                            System.out.print("Digite o raio do círculo: ");
+                            int raioC = scanner.nextInt();
+                            Circulo c = new Circulo(raioC);
+                            c.calcularArea();
+                            c.imprimir();
+                        } else if (operacao == 2) {
+                            System.out.print("Digite o raio do círculo: ");
+                            int raioC = scanner.nextInt();
+                            Circulo c = new Circulo(raioC);
+                            c.calcularPerimetro();
+                            c.imprimir();
+                        } else {
+                            System.out.println("Operação inválida. Tente novamente.");
+                        }
+                        break;
+                }
+            }
+
+            if (!operacaoSelecionada) {
+                System.out.println("Opção inválida. Tente novamente.");
+            }
+
+            System.out.println();
         }
-
-        System.out.println("Total de impostos/taxas: R$" + df.format(totalImpostosTaxas));
-        System.out.println("Total a pagar: R$" + df.format(totalImpostosTaxas + itens.stream().mapToDouble(Item::getValor).sum()));
     }
 }
-
