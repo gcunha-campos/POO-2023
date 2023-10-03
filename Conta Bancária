@@ -1,0 +1,67 @@
+// Interface Tributavel
+interface Tributavel {
+    double calculaTributos();
+}
+
+// Classe Conta
+class Conta {
+    protected double saldo;
+
+    public Conta(double saldo) {
+        this.saldo = saldo;
+    }
+
+    public void sacar(double valor) {
+        saldo -= valor;
+    }
+
+    public void depositar(double valor) {
+        saldo += valor;
+    }
+
+    public double obterSaldo() {
+        return saldo;
+    }
+}
+
+// Classe ContaPoupanca
+class ContaPoupanca extends Conta {
+    public ContaPoupanca(double saldo) {
+        super(saldo);
+    }
+}
+
+// Classe ContaCorrente
+class ContaCorrente extends Conta implements Tributavel {
+    public ContaCorrente(double saldo) {
+        super(saldo);
+    }
+
+    @Override
+    public double calculaTributos() {
+        return saldo * 0.01;
+    }
+}
+
+// Classe SeguroDeVida
+class SeguroDeVida implements Tributavel {
+    @Override
+    public double calculaTributos() {
+        return 42.0;
+    }
+}
+
+// Classe TestaTributavel
+public class TestaTributavel {
+    public static void main(String[] args) {
+        ContaPoupanca poupanca = new ContaPoupanca(1000);
+        ContaCorrente corrente = new ContaCorrente(2000);
+        SeguroDeVida seguro = new SeguroDeVida();
+
+        System.out.println("Saldo da Conta Poupanca: " + poupanca.obterSaldo());
+        System.out.println("Saldo da Conta Corrente: " + corrente.obterSaldo());
+
+        System.out.println("Tributos da Conta Corrente: " + corrente.calculaTributos());
+        System.out.println("Tributos do Seguro de Vida: " + seguro.calculaTributos());
+    }
+}
