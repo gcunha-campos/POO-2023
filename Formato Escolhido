@@ -1,0 +1,110 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.IOException;
+
+// Interface para formato de estruturação da informação
+interface RespostaFormato {
+    String formatar(Object objeto);
+}
+
+// Implementação para formato XML
+class XMLRespostaFormato implements RespostaFormato {
+    private final XmlMapper xmlMapper = new XmlMapper();
+
+    @Override
+    public String formatar(Object objeto) {
+        try {
+            return xmlMapper.writeValueAsString(objeto);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
+
+// Implementação para formato JSON
+class JSONRespostaFormato implements RespostaFormato {
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public String formatar(Object objeto) {
+        try {
+            return objectMapper.writeValueAsString(objeto);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
+
+// Implementação para formato YAML
+class YAMLRespostaFormato implements RespostaFormato {
+    private final Yaml yaml = new Yaml();
+
+    @Override
+    public String formatar(Object objeto) {
+        return yaml.dump(objeto);
+    }
+}
+
+// Classe para representar um veículo elétrico
+class VeiculoEletrico {
+    String modelo;
+    String marca;
+    int autonomia;
+    int velocidadeMaxima;
+    double precoSugerido;
+}
+
+// Classe para representar uma unidade federativa (UF)
+class UF {
+    String nome;
+    String sigla;
+    String capital;
+    // Adicione os outros atributos conforme necessário
+}
+
+// Classe principal
+public class ProgramaFormatoResposta {
+    public static void main(String[] args) {
+        // Gere automaticamente conteúdo para teste
+        VeiculoEletrico veiculo = new VeiculoEletrico();
+        veiculo.modelo = "Model X";
+        veiculo.marca = "Tesla";
+        veiculo.autonomia = 500;
+        veiculo.velocidadeMaxima = 200;
+        veiculo.precoSugerido = 80000.0;
+
+        UF uf = new UF();
+        uf.nome = "São Paulo";
+        uf.sigla = "SP";
+        uf.capital = "São Paulo";
+        // Preencha os outros atributos conforme necessário
+
+        // Solicite ao usuário o formato desejado
+        String formatoEscolhido = "JSON";  // Substitua isso com entrada do usuário
+
+        // Escolha o formato correto
+        RespostaFormato formato;
+        switch (formatoEscolhido.toUpperCase()) {
+            case "XML":
+                formato = new XMLRespostaFormato();
+                break;
+            case "JSON":
+                formato = new JSONRespostaFormato();
+                break;
+            case "YAML":
+                formato = new YAMLRespostaFormato();
+                break;
+            default:
+                System.out.println("Formato inválido");
+                return;
+        }
+
+        // Exiba o resultado no terminal
+        System.out.println(formato.formatar(veiculo));
+        System.out.println(formato.formatar(uf));
+    }
+}
