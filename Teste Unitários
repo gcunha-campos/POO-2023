@@ -1,0 +1,28 @@
+import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class VendaTest {
+
+    @Test
+    public void testCalcularValorTotalSemDesconto() {
+        Venda venda = new Venda("Cliente Teste", new ArrayList<>(), 100.0, 0.0);
+        venda.adicionarItem(new ItemVenda("Item 1", 50.0, 2.0));
+        venda.adicionarItem(new ItemVenda("Item 2", 30.0, 1.0));
+        assertEquals(130.0, venda.calcularValorTotal(), 0.001);
+    }
+
+    @Test
+    public void testCalcularValorTotalComDesconto() {
+        Venda venda = new Venda("Cliente Teste", new ArrayList<>(), 100.0, 10.0);
+        venda.adicionarItem(new ItemVenda("Item 1", 50.0, 2.0));
+        venda.adicionarItem(new ItemVenda("Item 2", 30.0, 1.0));
+        assertEquals(120.0, venda.calcularValorTotal(), 0.001);
+    }
+
+    @Test
+    public void testAdicionarItem() {
+        Venda venda = new Venda("Cliente Teste", new ArrayList<>(), 0.0, 0.0);
+        venda.adicionarItem(new ItemVenda("Item 1", 50.0, 2.0));
+        assertEquals(1, venda.getItens().size());
+    }
+}
