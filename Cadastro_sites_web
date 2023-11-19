@@ -1,0 +1,107 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Site implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private String descricao;
+    private String url;
+    private String dataCadastro;
+
+    public Site(String descricao, String url, String dataCadastro) {
+        this.descricao = descricao;
+        this.url = url;
+        this.dataCadastro = dataCadastro;
+    }
+
+    @Override
+    public String toString() {
+        return "Descrição: " + descricao + "\nURL: " + url + "\nData de Cadastro: " + dataCadastro + "\n";
+    }
+}
+
+class SiteCadastro {
+    private List<Site> sites;
+    private int proximoId;
+
+    public SiteCadastro() {
+        this.sites = new ArrayList<>();
+        this.proximoId = 1;
+    }
+
+    public void adicionarSite(Site site) {
+        siteCadastro.add(site);
+        salvarSites();
+    }
+
+    public void exibirSites() {
+        for (Site site : sites) {
+            System.out.println(site);
+        }
+    }
+
+    private void salvarSites() {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("sites/" + proximoId + ".data"))) {
+            outputStream.writeObject(sites);
+            proximoId++;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void carregarSites() {
+        File folder = new File("sites");
+        File[] listOfFiles = folder.listFiles();
+
+        if (listOfFiles != null) {
+            for (File file : listOfFiles) {
+                if (file.isFile()) {
+                    try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
+                        List<Site> sitesFromFile = (List<Site>) inputStream.readObject();
+                        sites.addAll(sitesFromFile);
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+}
+
+public class CadastroSites {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        SiteCadastro siteCadastro = new SiteCadastro();
+
+        siteCadastro.carregarSites();
+
+        int opcao;
+        do {
+            System.out.println("1. Adicionar Site");
+            System.out.println("2. Exibir Sites");
+            System.out.println("0. Sair");
+            System.out.print("Escolha uma opção: ");
+            opcao = scanner.nextInt();
+
+            switch (opcao) {
+                case 1:
+                    scanner.nextLine(); // Consumir a quebra de linha pendente
+                    System.out.print("Digite a descrição do site: ");
+                    String descricao = scanner.nextLine();
+                    System.out.print("Digite a URL do site: ");
+                    String url = scanner.nextLine();
+                    String dataCadastro = "Hoje"; // Poderia adicionar lógica para pegar a data atual
+                    Site novoSite = new Site(descricao, url, dataCadastro);
+                    siteCadastro.adicionarSite(novoSite);
+                    break;
+                case 2:
+                    siteCadastro.exibirSites();
+                    break;
+            }
+        } while (opcao != 0);
+
+        scanner.close();
+    }
+}
